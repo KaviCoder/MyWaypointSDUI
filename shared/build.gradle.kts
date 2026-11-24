@@ -1,13 +1,17 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 plugins {
+
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
+    val xcf = XCFramework("Shared")
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -15,6 +19,7 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "Shared"
             isStatic = true
+            xcf.add(this)
         }
     }
     android {
@@ -42,6 +47,7 @@ kotlin {
             implementation(libs.compose.uiTooling)
         }
         commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.json)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
